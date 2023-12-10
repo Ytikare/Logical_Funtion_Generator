@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Data_Structures\Data_Structures.csproj" />
+    <ProjectReference Include="..\Text_Operators\Text_Operators.csproj" />
+  </ItemGroup>
+
 </Project>

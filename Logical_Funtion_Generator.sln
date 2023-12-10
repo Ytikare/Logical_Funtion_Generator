@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data_Structures", "Data_Structures\Data_Structures.csproj", "{CC0FD348-C751-4E57-AF88-FFBE766CBB82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Text_Operators", "Text_Operators\Text_Operators.csproj", "{F6350B6B-F926-49C8-A56E-28226E5E8676}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{CC0FD348-C751-4E57-AF88-FFBE766CBB82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC0FD348-C751-4E57-AF88-FFBE766CBB82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC0FD348-C751-4E57-AF88-FFBE766CBB82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6350B6B-F926-49C8-A56E-28226E5E8676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6350B6B-F926-49C8-A56E-28226E5E8676}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6350B6B-F926-49C8-A56E-28226E5E8676}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6350B6B-F926-49C8-A56E-28226E5E8676}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
