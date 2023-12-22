@@ -1,6 +1,6 @@
 ﻿namespace Core
 {
-    using System.Collections.Generic;
+    using Data_Structures;
     using Text_Operators;
 
     internal class Program
@@ -9,7 +9,7 @@
         {
             StringBuilder sb = new StringBuilder();
 
-            var dic = new Dictionary<string, string>();
+            var dictionary = new CustomNonGenericDictionary();
 
             string message = "";
             bool loop = true;

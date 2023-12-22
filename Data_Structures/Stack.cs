@@ -6,7 +6,7 @@
 
         private int index = -1;
 
-        public int Coutn => values.Length;
+        public int Count => values.Length;
 
         public Stack()
         {
