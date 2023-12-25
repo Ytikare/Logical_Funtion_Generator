@@ -23,10 +23,40 @@ namespace Text_Operators
             return sb.ToString();
         }
 
-
-        public static bool Define(string line, out int functionName, out TreeNode root) 
+        public static Data_Structures.List<string> GetParameters(string s) 
         {
+            Data_Structures.List<string> parameters = new Data_Structures.List<string>();
+
+            bool flag = false;
+            StringBuilder sb = new StringBuilder();
+
+
+            for (int i = s.IndexOfChar('('); i < s.IndexOfChar(')'); i++)
+            {
+                if (char.IsLetter(s[i]))
+                {
+                    flag = true;
+                    sb.Append(s[i]);
+                }
+                else if (s[i] == ',')
+                {
+                    parameters.Add(sb.ToString());
+                    sb.Clear();
+                }
+            }
+
+            return parameters;
+        }
+
+
+        public static bool Define(string line,int parametersCount, out int functionCode, out TreeNode root) 
+        {
+            //example input 1: a b &
+            //example input 2: 
+            //example input 3:
+            //example input 4:
             string fName, expression;
+
 
             StringBuilder sb = new StringBuilder();
 
@@ -34,16 +64,23 @@ namespace Text_Operators
             {
                 sb.Append(line[i]);
             }
-
             fName = sb.ToString();
-
             sb.Clear();
 
+
             Data_Structures.Stack<TreeNode> stack = new Data_Structures.Stack<TreeNode>();
+
 
             for (int i = line.IndexOfChar('"'); i < line.Length; i++)
             {
                 char c = line[i];
+
+
+                if (c == ' ') 
+                {
+                    continue;
+                }
+
 
                 if (char.IsLetter(c))
                 {
@@ -76,18 +113,24 @@ namespace Text_Operators
                         Left = temp,
                         Name = c.ToString()
                     });
-
                 }
             }
 
+
             if (stack.Count != 1)
             {
-                throw new InvalidDataException();
+                throw new InvalidDataException("Invalid line sequence");
             }
-
             root = stack.Pop();
 
-            functionName = Hasher.HashName(fName);
+            if (TreeNode.GetLeafsCount(root) != parametersCount)
+            {
+                throw new InvalidOperationException();
+            }
+
+            functionCode = Hasher.HashName(fName);
+
+            return true;
         }
     }
 }

@@ -3,20 +3,20 @@
     
     public class CustomNonGenericDictionary
     {
-        private KeyValuePair<string, FuncData>? First;
-        private KeyValuePair<string, FuncData>? Last;
+        private KeyValuePair<int, FuncData>? First;
+        private KeyValuePair<int, FuncData>? Last;
         public int Count { get; private set; }
 
-        public FuncData this[string key] => GetValue(key);
+        public FuncData this[int key] => GetValue(key);
 
         public CustomNonGenericDictionary()
         {
             Count = 0;
         }
 
-        public void Add(string key, FuncData value)
+        public void Add(int key, FuncData value)
         {
-            var temp = new KeyValuePair<string, FuncData>(key, value);
+            var temp = new KeyValuePair<int, FuncData>(key, value);
 
             if (Count == 0)
             {
@@ -30,11 +30,11 @@
             Count++;
         }
 
-        private FuncData GetValue(string key) 
+        private FuncData GetValue(int key) 
         {
             if (Count > 0)
             {
-                KeyValuePair<string, FuncData> temp = First!;
+                KeyValuePair<int, FuncData> temp = First!;
 
                 while (true)
                 {

@@ -6,6 +6,11 @@
         public int numberOfParameters;
         public List<string> parameters = new List<string>();
 
+        public FuncData()
+        {
+
+        }
+
         public FuncData(TreeNode root, int numberOfParameters)
         {
             this.root = root;
