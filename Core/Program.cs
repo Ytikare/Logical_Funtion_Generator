@@ -10,7 +10,7 @@
         {
             StringBuilder sb = new StringBuilder();
 
-            var dictionary = new CustomNonGenericDictionary();
+            var dictionary = new Dictionary<int, FuncData>();
 
             string message = "";
             bool loop = true;

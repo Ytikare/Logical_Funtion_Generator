@@ -1,7 +1,7 @@
 ﻿namespace Data_Structures
 {
     
-    public class CustomNonGenericDictionary<TKey, TValue> where TKey : IEquatable<TKey>
+    public class Dictionary<TKey, TValue> where TKey : IEquatable<TKey>
     {
         private KeyValuePair<TKey, TValue>? First;
         private KeyValuePair<TKey, TValue>? Last;
@@ -9,7 +9,7 @@
 
         public TValue? this[TKey key] => GetValue(key);
 
-        public CustomNonGenericDictionary()
+        public Dictionary()
         {
             Count = 0;
         }
