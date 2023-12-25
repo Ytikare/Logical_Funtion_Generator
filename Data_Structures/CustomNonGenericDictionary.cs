@@ -1,22 +1,22 @@
 ﻿namespace Data_Structures
 {
     
-    public class CustomNonGenericDictionary
+    public class CustomNonGenericDictionary<TKey, TValue> where TKey : IEquatable<TKey>
     {
-        private KeyValuePair<int, FuncData>? First;
-        private KeyValuePair<int, FuncData>? Last;
+        private KeyValuePair<TKey, TValue>? First;
+        private KeyValuePair<TKey, TValue>? Last;
         public int Count { get; private set; }
 
-        public FuncData this[int key] => GetValue(key);
+        public TValue? this[TKey key] => GetValue(key);
 
         public CustomNonGenericDictionary()
         {
             Count = 0;
         }
 
-        public void Add(int key, FuncData value)
+        public void Add(TKey key, TValue value)
         {
-            var temp = new KeyValuePair<int, FuncData>(key, value);
+            var temp = new KeyValuePair<TKey, TValue>(key, value);
 
             if (Count == 0)
             {
@@ -30,15 +30,15 @@
             Count++;
         }
 
-        private FuncData GetValue(int key) 
+        private TValue? GetValue(TKey key) 
         {
             if (Count > 0)
             {
-                KeyValuePair<int, FuncData> temp = First!;
+                KeyValuePair<TKey, TValue> temp = First!;
 
                 while (true)
                 {
-                    if (key.StringCompare(temp.Key))
+                    if (temp.Key.Equals(key))
                     {
                         return temp.Value;
                     }
@@ -49,7 +49,7 @@
                     }
                 }
             }
-            return null;
+            return default;
         }
     }
 }
