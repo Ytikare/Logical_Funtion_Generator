@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Data_Structures\Data_Structures.csproj" />
     <ProjectReference Include="..\Text_Operators\Text_Operators.csproj" />
   </ItemGroup>

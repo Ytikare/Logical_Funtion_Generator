@@ -1,7 +1,9 @@
 ﻿namespace Core
 {
+    using static Common.Constants;
+
     using Data_Structures;
-    using System.ComponentModel.Design.Serialization;
+    using Data_Structures.Collections;
     using Text_Operators;
 
     internal class Program
@@ -10,14 +12,17 @@
         {
             StringBuilder sb = new StringBuilder();
 
-            var dictionary = new Dictionary<int, FuncData>();
+            var hashset = new HashSet<int, FuncData>(HASHSET_SIZE);
 
             string message = "";
             bool loop = true;
 
-            while (loop) 
+            while (loop)
             {
                 Console.WriteLine(message);
+
+                Console.WriteLine();
+
                 Console.WriteLine("Avaiable commands:");
                 Console.WriteLine("DEFINE - define function");
                 Console.WriteLine("SOLVE - solve a function with specific name");
@@ -25,12 +30,12 @@
                 Console.WriteLine("EXIT - exit the application");
                 Console.Write("Enter your command: ");
                 string line = Console.ReadLine()!;
-                
-                
+
+
                 string command = CommandParser.ReadCommand(line);
 
 
-                switch (command) 
+                switch (command)
                 {
                     case "DEFINE":
 
@@ -38,29 +43,66 @@
                         {
                             TreeNode root;
                             int functionCode;
+                            string funcName;
                             var parameters = CommandParser.GetParameters(line);
 
-                            CommandParser.Define(line, parameters.Count, out functionCode, out root);
+                            CommandParser.Define(line, parameters.Count, out functionCode, out funcName, out root, hashset);
 
-                            FuncData el = new FuncData() 
+                            var temp = new Dictionary<string, bool>();
+
+                            foreach (var param in parameters)
+                            {
+                                temp.Add(param, false);
+                            }
+
+                            FuncData el = new FuncData()
                             {
                                 root = root,
                                 numberOfParameters = parameters.Count,
-                                parameters = parameters
+                                parameters = temp,
+                                funcName = funcName
                             };
 
-                            dictionary.Add(functionCode, el);
+                            hashset.Add(functionCode, functionCode, el);
+                            message = $"Function {el.funcName} has been defined!";
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e.Message);
+                            message = e.Message;
                         }
                         break;
 
                     case "ALL":
+
+                        var results = CommandParser.All(line, hashset);
+
+                        foreach (var item in results)
+                        {
+                            sb.Append($"{item}{Environment.NewLine}");
+                        }
+
+                        message = sb.ToString();
+                        sb.Clear();
                         break;
 
                     case "SOLVE":
+                        try
+                        {
+                            var result = CommandParser.Solve(line, hashset);
+
+                            if (result)
+                            {
+                                message = "Result: 1";
+                            }
+                            else
+                            {
+                                message = "Result: 0";
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            message = e.Message;
+                        }
                         break;
 
                     case "EXIT":

@@ -1,4 +1,5 @@
 ﻿using Data_Structures;
+using static Common.Constants;
 
 namespace Text_Operators
 {
@@ -12,7 +13,7 @@ namespace Text_Operators
 
             for (var i = 0; i < c.Length; i++) 
             {
-                key = (key * s + (int)c[i]) % 123;
+                key = (key * s + (int)c[i]) % HASHSET_SIZE;
             }
 
             return key;

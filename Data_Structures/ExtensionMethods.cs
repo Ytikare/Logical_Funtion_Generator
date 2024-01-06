@@ -60,5 +60,26 @@
             }
             return arr;
         }
+
+
+        public static string SubstringExtension(this string str, int range) 
+        {
+            if (range > str.Length)
+            {
+                throw new InvalidOperationException("Range is bigger than string lenght!");
+            }
+            else if (range == str.Length)
+            {
+                return str;
+            }
+
+            char[] temp = new char[range];
+            for (int i = 0; i < range; i++)
+            {
+                temp[i] = str[i];
+            }
+
+            return new string(temp);
+        }
     }
 }

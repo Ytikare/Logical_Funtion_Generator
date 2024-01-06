@@ -1,6 +1,5 @@
 ﻿using Data_Structures;
-
-using StringBuilder = Text_Operators.StringBuilder;
+using Data_Structures.Collections;
 
 namespace Text_Operators
 {
@@ -10,7 +9,7 @@ namespace Text_Operators
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (char c in line) 
+            foreach (char c in line)
             {
                 if (c == ' ')
                 {
@@ -23,22 +22,20 @@ namespace Text_Operators
             return sb.ToString();
         }
 
-        public static Data_Structures.List<string> GetParameters(string s) 
+        public static Data_Structures.Collections.List<string> GetParameters(string s)
         {
-            Data_Structures.List<string> parameters = new Data_Structures.List<string>();
+            Data_Structures.Collections.List<string> parameters = new Data_Structures.Collections.List<string>();
 
-            bool flag = false;
             StringBuilder sb = new StringBuilder();
 
 
-            for (int i = s.IndexOfChar('('); i < s.IndexOfChar(')'); i++)
+            for (int i = s.IndexOfChar('(') + 1; i <= s.IndexOfChar(')'); i++)
             {
-                if (char.IsLetter(s[i]))
+                if (char.IsLetter(s[i]) || char.IsDigit(s[i]))
                 {
-                    flag = true;
                     sb.Append(s[i]);
                 }
-                else if (s[i] == ',')
+                else if (s[i] == ',' || s[i] == ')')
                 {
                     parameters.Add(sb.ToString());
                     sb.Clear();
@@ -49,34 +46,69 @@ namespace Text_Operators
         }
 
 
-        public static bool Define(string line,int parametersCount, out int functionCode, out TreeNode root) 
+        public static bool Define(string line, int parametersCount, out int functionCode, out string functionName, out TreeNode root, HashSet<int, FuncData> hashset)
         {
             //example input 1: a b &
             //example input 2: 
             //example input 3:
             //example input 4:
-            string fName, expression;
-
-
+            string fName;
+            bool funcFlag = false;
             StringBuilder sb = new StringBuilder();
 
-            for (int i = line.IndexOfChar(' '); i < line.IndexOfChar('('); i++) 
-            {
-                sb.Append(line[i]);
-            }
-            fName = sb.ToString();
-            sb.Clear();
+            fName = GetFuntionNameFromLine(line);
+            functionName = fName;
+
+            Data_Structures.Collections.Stack<TreeNode> stack = new Data_Structures.Collections.Stack<TreeNode>();
 
 
-            Data_Structures.Stack<TreeNode> stack = new Data_Structures.Stack<TreeNode>();
-
-
-            for (int i = line.IndexOfChar('"'); i < line.Length; i++)
+            for (int i = line.IndexOfChar('"') + 1; i < line.Length - 1; i++)
             {
                 char c = line[i];
 
 
-                if (c == ' ') 
+                if (funcFlag && line[i] != ')')
+                {
+                    sb.Append(c);
+                    continue;
+                }
+
+                if (line[i + 1] == ' ' && funcFlag)
+                {
+                    sb.Append(')');
+                    string temp = sb.ToString();
+                    sb.Clear();
+
+                    string tempFuncName = temp.SubstringExtension(temp.IndexOfChar('('));
+                    int funcHash = Hasher.HashName(tempFuncName);
+                    var funcData = hashset[funcHash];
+
+                    while (funcData != null)
+                    {
+                        if (funcData.Pair.Key == funcHash)
+                        {
+                            break;
+                        }
+                        funcData = funcData.Next;
+                    }
+
+                    if (funcData == null)
+                    {
+                        throw new InvalidOperationException($"Function with name {tempFuncName} does not exist!");
+                    }
+
+                    var data = GetParameters(temp).ToArray();
+                    if (funcData.Pair.Value.CompareParameters(data) == false)
+                    {
+                        throw new InvalidDataException($"Invalid number of parameters have been based to the function {tempFuncName}!");
+                    }
+
+                    stack.Push(TreeNode.MakeCopy(funcData.Pair.Value.root));
+
+
+                    funcFlag = false;
+                }
+                else if (c == ' ')
                 {
                     continue;
                 }
@@ -84,6 +116,13 @@ namespace Text_Operators
 
                 if (char.IsLetter(c))
                 {
+                    if (char.IsLetter(line[i + 1] ))
+                    {
+                        funcFlag = true;
+                        sb.Append(c);
+                        continue;
+                    }
+
                     stack.Push(new TreeNode
                     {
                         IsOperator = false,
@@ -123,14 +162,144 @@ namespace Text_Operators
             }
             root = stack.Pop();
 
-            if (TreeNode.GetLeafsCount(root) != parametersCount)
-            {
-                throw new InvalidOperationException();
-            }
+            //if (TreeNode.GetLeafsCount(root) != parametersCount)
+            //{
+            //    throw new InvalidOperationException();
+            //}
 
             functionCode = Hasher.HashName(fName);
 
             return true;
+        }
+
+
+        public static bool Solve(string line, Data_Structures.Collections.HashSet<int, FuncData> functions)
+        {
+            string funcName = GetFuntionNameFromLine(line);
+            int funcCode = Hasher.HashName(funcName);
+
+            var list = functions[funcCode];
+            SetFunction(list, funcName);
+
+
+            var paramaeters = ConvertStringArrToInt(GetParameters(line).ToArray());
+
+            var funcData = list!.Pair.Value;
+
+            return funcData.GetValue(paramaeters);
+        }
+
+
+        public static string[] All(string line, Data_Structures.Collections.HashSet<int, FuncData> functions) 
+        {
+            string fName = GetFuntionNameFromLineForAll(line);
+            int funcitonHash = Hasher.HashName(fName);
+
+            var list = functions[funcitonHash];
+            SetFunction(list, fName);
+
+            var paramCount = list!.Pair.Value.numberOfParameters;
+            int[] arr = new int[paramCount];
+
+
+            Data_Structures.Collections.List<string> results = new Data_Structures.Collections.List<string>();
+
+            do
+            {
+                bool value = list.Pair.Value.GetValue(arr);
+
+
+                if (value)
+                {
+                    results.Add($"{FancyIntArrayDisplay(arr)}: 1");
+                }
+                else
+                {
+                    results.Add($"{FancyIntArrayDisplay(arr)}: 0");
+                }
+
+            } while (Next(arr, 2));
+
+
+            return results.ToArray();
+        }
+
+
+        private static string FancyIntArrayDisplay(int[] arr)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in arr)
+                sb.Append($"{item} ");
+            return sb.ToString();
+        }
+
+        private static bool Next(int[] arr, int v)
+        {
+            var k = arr.Length;
+
+            arr[k - 1]++;
+            for (int i = k - 1; i > 0; i--)
+            {
+                if (arr[i] >= v)
+                {
+                    arr[i] = 0;
+                    arr[i - 1]++;
+                }
+            }
+            return arr[0] < v;
+        }
+
+        private static void SetFunction(KeyValuePairNode<int, FuncData>? list, string funcName)
+        {
+            while (list != null)
+            {
+                if (list.Pair.Value.funcName.Equals(funcName))
+                {
+                    break;
+                }
+
+
+                list = list.Next;
+            }
+
+            if (list == null)
+            {
+                throw new InvalidDataException("Function with specified name does not exist!");
+            }
+        }
+        
+        private static string GetFuntionNameFromLineForAll(string line)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = line.IndexOfChar(' ') + 1; i < line.Length; i++)
+            {
+                sb.Append(line[i]);
+            }
+            return sb.ToString();
+        }
+
+        private static string GetFuntionNameFromLine(string line)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = line.IndexOfChar(' ') + 1; i < line.IndexOfChar('('); i++)
+            {
+                sb.Append(line[i]);
+            }
+            return sb.ToString();
+        }
+
+        private static int[] ConvertStringArrToInt(string[] arr) 
+        {
+            int[] temp = new int[arr.Length];
+
+            for (int i = 0; i < arr.Length; i++) 
+            {
+                temp[i] = int.Parse(arr[i]);
+            }
+
+            return temp;
         }
     }
 }

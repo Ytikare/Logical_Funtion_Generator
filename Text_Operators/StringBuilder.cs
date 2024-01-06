@@ -28,12 +28,19 @@
             if (lenght == 0)
             {
                 AppendEmptySB(line[0]);
+                for (int i = 1; i < line.Length; i++)
+                {
+                    this.Append(line[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < line.Length; i++)
+                {
+                    this.Append(line[i]);
+                }
             }
 
-            for (int i = 1; i < line.Length; i++)
-            {
-                this.Append(line[i]);
-            }
         }
 
         public void Append(char c) 

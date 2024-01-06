@@ -1,4 +1,4 @@
-﻿namespace Data_Structures
+﻿namespace Data_Structures.Collections
 {
     public class Stack<T>
     {
@@ -6,7 +6,7 @@
 
         private int index = -1;
 
-        public int Count => values.Length;
+        public int Count => index + 1;
 
         public Stack()
         {
@@ -22,7 +22,7 @@
         {
             if (index == -1)
             {
-                return default(T);
+                return default;
             }
             return values[index];
         }
@@ -31,12 +31,15 @@
         {
             if (index == -1)
             {
-                return default(T);
+                return default;
             }
 
-            index -= 1;
+            var temp = values[index];
 
-            return values[index + 1];
+            values[index] = default;
+            index--;
+
+            return temp;
         }
 
         public void Push(T value)
@@ -48,7 +51,7 @@
                 ExpandValues();
             }
 
-            this.values[index] = value;
+            values[index] = value;
         }
 
         private void ExpandValues()
