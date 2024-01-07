@@ -39,7 +39,7 @@ namespace Data_Structures
         }
 
 
-        public static int GetLeafsCount(TreeNode? node) 
+        public static int GetLeafsCount(TreeNode? node, List<string> uniqueElements) 
         {
             if (node == null)
             {
@@ -47,9 +47,13 @@ namespace Data_Structures
             }
             if (node.Left == null && node.Right == null)
             {
+                if (uniqueElements.Contains(node.Name) == false)
+                {
+                    uniqueElements.Add(node.Name);
+                }
                 return 1;
             }
-            return GetLeafsCount(node.Left) + GetLeafsCount(node.Right);
+            return GetLeafsCount(node.Left, uniqueElements) + GetLeafsCount(node.Right, uniqueElements);
         }
 
         public static void GetLeafs(List<TreeNode> leafs, TreeNode node) 

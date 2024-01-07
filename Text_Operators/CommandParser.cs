@@ -158,14 +158,17 @@ namespace Text_Operators
 
             if (stack.Count != 1)
             {
-                throw new InvalidDataException("Invalid line sequence");
+                throw new InvalidDataException("Invalid line sequence!");
             }
             root = stack.Pop();
 
-            //if (TreeNode.GetLeafsCount(root) != parametersCount)
-            //{
-            //    throw new InvalidOperationException();
-            //}
+            Data_Structures.Collections.List<string> tempList = new Data_Structures.Collections.List<string>();
+            TreeNode.GetLeafsCount(root, tempList);
+            
+            if (tempList.Count != parametersCount)
+            {
+                throw new InvalidDataException("Different number of parameters in function definition and expression!");
+            }
 
             functionCode = Hasher.HashName(fName);
 

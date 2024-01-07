@@ -73,16 +73,23 @@
                         break;
 
                     case "ALL":
-
-                        var results = CommandParser.All(line, hashset);
-
-                        foreach (var item in results)
+                        try
                         {
-                            sb.Append($"{item}{Environment.NewLine}");
-                        }
+                            var results = CommandParser.All(line, hashset);
 
-                        message = sb.ToString();
-                        sb.Clear();
+                            foreach (var item in results)
+                            {
+                                sb.Append($"{item}{Environment.NewLine}");
+                            }
+
+                            message = sb.ToString();
+                            sb.Clear();
+                        }
+                        catch (Exception e )
+                        {
+                            message = e.Message;
+                        }
+                        
                         break;
 
                     case "SOLVE":

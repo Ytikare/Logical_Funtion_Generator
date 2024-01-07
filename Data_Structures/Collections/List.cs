@@ -25,6 +25,10 @@ namespace Data_Structures.Collections
 
         public void Add(T item)
         {
+            if (lenght + 1 == data.Length)
+            {
+                DoubleDataStorageSize();
+            }
             lenght++;
             data[lenght] = item;
         }
@@ -68,6 +72,18 @@ namespace Data_Structures.Collections
                 values[i] = data[i];
             }
             return values;
+        }
+
+        private void DoubleDataStorageSize() 
+        {
+            T[] temp = new T[data.Length * 2];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                temp[i] = data[i];
+            }
+
+            this.data = temp;
         }
     }
 }
