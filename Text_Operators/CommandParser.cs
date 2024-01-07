@@ -48,10 +48,6 @@ namespace Text_Operators
 
         public static bool Define(string line, int parametersCount, out int functionCode, out string functionName, out TreeNode root, HashSet<int, FuncData> hashset)
         {
-            //example input 1: a b &
-            //example input 2: 
-            //example input 3:
-            //example input 4:
             string fName;
             bool funcFlag = false;
             StringBuilder sb = new StringBuilder();
